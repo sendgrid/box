@@ -69,5 +69,5 @@ cleanup.sh
 .idea
 README.txt
 include/
-pip-selfcheck.cfg
+pip-selfcheck.json
 pyvenv.cfg
