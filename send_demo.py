@@ -12,9 +12,16 @@ import sendgrid
 from sendgrid.helpers.mail import *
 
 ROOT_FOLDER_ID = 0
+
+# Configuraton
 DEMO_FOLDER_NAME = 'BoxDev Demo Folder'
 DEMO_FOLDER_ID = None
 FILE_URL = 'https://sendgrid.com/wp-content/themes/sgdotcom/pages/brand/2016/SendGrid-Logo.png'
+FILE_NAME = 'SendGrid_Logo'
+FROM_EMAIL = 'dx@sendgrid.com'
+FROM_EMAIL_NAME = 'DX Team'
+TO_EMAIL = 'elmer.thomas@sendgrid.com'
+TO_EMAIL_NAME = 'Elmer Thomas'
 
 # Authentication
 oauth = OAuth2(
@@ -42,14 +49,15 @@ shared_folder = get_folder(DEMO_FOLDER_NAME)
 
 # Grab the file from a URL and store it in Box
 file = io.BytesIO(urllib.urlopen(FILE_URL).read())
-uploaded_file = shared_folder.upload_stream(file, 'SendGrid_Logo_' + str(int(random.random()*10000)) + '.png')
+random_number = str(int(random.random()*10000))
+uploaded_file = shared_folder.upload_stream(file, '{0}_{1}.png'.format(FILE_NAME, random_number))
 shared_link = uploaded_file.get_shared_link()
 
 # Send Email with link to file stored on Box
 sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-from_email = Email(email="dx@sendgrid.com", name="DX Team")
+from_email = Email(email=FROM_EMAIL, name=FROM_EMAIL_NAME)
 subject = "SendGrid BoxDev Demo!"
-to_email = Email(email="elmer.thomas@sendgrid.com", name="Elmer Thomas")
+to_email = Email(email=TO_EMAIL, name=TO_EMAIL_NAME)
 html_content = '<html><body>Download Here: <a href="{}">SendGrid Logo File</a></body></html>'.format(shared_link)
 content = Content(type="text/html", value=html_content)
 mail = Mail(from_email=from_email, subject=subject, to_email=to_email, content=content)
