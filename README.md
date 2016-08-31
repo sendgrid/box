@@ -1,12 +1,16 @@
-# Installation
+# Demo Sending Email with Attachment Stored in Box
+
+## Installation
+
+Get your [SendGrid Account](https://app.sendgrid.com/signup?source=boxdev)
 
 Get your [Box Credentials](https://app.box.com/developers/services/edit/)
 
 ```bash
-mkdir box
+git clone https://github.com/sendgrid/box.git
 cd box
-python3 -m venv ~/Workspace/sendgrid/box
-source ~/Workspace/sendgrid/box/bin/activate
+python3 -m venv .
+source ./bin/activate
 pip install -r requirements.txt
 ```
 
@@ -16,10 +20,10 @@ Update credentials in `.env_sample`
 mv .env_sample .env
 ```
 
-# Execution
+## Execution
 
 ```bash
-source ~/Workspace/sendgrid/box/bin/activate
+source ./bin/activate
 source ./.env
-python hello_box.py
+python send_demo.py
 ```
