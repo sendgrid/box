@@ -71,3 +71,4 @@ README.txt
 include/
 pip-selfcheck.json
 pyvenv.cfg
+bin/flask
