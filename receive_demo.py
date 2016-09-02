@@ -21,15 +21,15 @@ oauth = OAuth2(
 client = Client(oauth)
 root_folder = client.folder(folder_id=c.root_folder_id)
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 
-@app.route('/', methods=['GET'])
+@application.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
 
-@app.route(c.endpoint, methods=['POST'])
+@application.route(c.endpoint, methods=['POST'])
 def inbound_parse():
     parse = Parse(c, request)
     shared_folder = get_folder(client, root_folder, c.demo_folder_name_incoming)
@@ -50,4 +50,12 @@ def inbound_parse():
 
 if __name__ == '__main__':
     # Be sure to set config.debug_mode to False in production
-    app.run(host=c.flask_host, debug=c.debug_mode, port=c.port)
+
+    # Uncomment for local testing
+    # application.host =  c.flask_host
+    # application.port = c.port
+    # application.debug = c.debug
+
+    # Setting debug to True enables debug output. This setting should be
+    # set to False before deploying a production app.
+    application.run(debug=True)
