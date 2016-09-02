@@ -9,8 +9,8 @@ Get your [Box Credentials](https://app.box.com/developers/services/edit/)
 ```bash
 git clone https://github.com/sendgrid/box.git
 cd box
-python3 -m venv .
-source ./bin/activate
+virtualenv venv
+source ./venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -30,7 +30,7 @@ Update credentials in `.env_sample`.
 Update configuration variables in [config.yml](https://github.com/sendgrid/box/blob/master/config.yml#L36).
 
 ```bash
-source ./bin/activate
+source ./venv/bin/activate
 source ./.env
 python send_demo.py
 ```
@@ -46,12 +46,12 @@ Get your [Box Credentials](https://app.box.com/developers/services/edit/)
 ```bash
 git clone https://github.com/sendgrid/box.git
 cd box
-python3 -m venv .
-source ./bin/activate
+virtualenv venv
+source ./venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Update credentials in `.env_sample`.
+Update credentials in `.env_sample`. Set AWS to True if deploying to Amazon Cloud.
 
 ```bash
 mv .env_sample .env
@@ -60,7 +60,7 @@ source ./.env
 
 Update configuration variables in [config.yml](https://github.com/sendgrid/box/blob/master/config.yml#L36).
 
-## Execution
+## Local Execution
 
 Setup your [MX records](https://sendgrid.com/docs/Classroom/Basics/Inbound_Parse_Webhook/setting_up_the_inbound_parse_webhook.html#-Setup). Depending on your domain name host, you may need to wait up to 48 hours for the settings to propagate.
 
@@ -69,7 +69,7 @@ Update credentials in `.env_sample`.
 Update configuration variables in [config.yml](https://github.com/sendgrid/box/blob/master/config.yml#L36).
 
 ```bash
-source ./bin/activate
+source ./venv/bin/activate
 source ./.env
 python receive_demo.py
 ```
@@ -90,3 +90,26 @@ Update your SendGrid Incoming Parse settings: [Settings Page](https://app.sendgr
 Next, send an email to [anything]@inbound.yourdomain.com with an attachment, then look at the terminal where you started the Inbound Parse listener.
 
 Check your Box account. The attached file should be located in the folder specified in `config.yml`
+
+## Deploy to AWS
+
+```bash
+deactivate
+pip install awsebcli
+source ./venv/bin/activate
+eb init -p python3.4 inbound-parse
+eb create inbound-parse3-env
+eb setenv CLIENT_ID='YOUR_CLIENT_ID'
+eb setenv CLIENT_SECRET='YOUR_CLIENT_SECRET'
+eb setenv DEVELOPER_TOKEN='YOUR_DEVELOPER_TOKEN'
+eb setenv AWS='True'
+eb open
+```
+
+Use that URL + /inbound as the value of the URL field at your [SendGrid Parse settings page](https://app.sendgrid.com/settings/parse).
+
+For subsequent updates to your code, after commiting your code use the following command to update:
+
+```bash
+eb deploy inbound-parse3-env
+```

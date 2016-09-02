@@ -51,11 +51,11 @@ def inbound_parse():
 if __name__ == '__main__':
     # Be sure to set config.debug_mode to False in production
 
-    # Uncomment for local testing
-    # application.host =  c.flask_host
-    # application.port = c.port
-    # application.debug = c.debug
+    if os.environ.get('AWS') == 'False':
+        application.host =  c.flask_host
+        application.port = c.port
+        application.debug = c.debug_mode
+    else:
+        application.debug = False
 
-    # Setting debug to True enables debug output. This setting should be
-    # set to False before deploying a production app.
-    application.run(debug=True)
+    application.run()
