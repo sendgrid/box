@@ -32,3 +32,22 @@ keys:
 
 # URL that the sender will POST to
 host: 'http://0.0.0.0:5000/inbound'
+
+# Custom Configuration
+
+## Shared
+root_folder_id: 0
+flask_host: '0.0.0.0'
+
+## Send Email
+demo_folder_name: 'BoxDev Demo Folder'
+demo_folder_id: None
+file_url: 'https://sendgrid.com/wp-content/themes/sgdotcom/pages/brand/2016/SendGrid-Logo.png'
+file_name: 'SendGrid_Logo'
+from_email: 'dx@sendgrid.com'
+from_email_name: 'DX Team'
+to_email: 'elmer.thomas@sendgrid.com'
+to_email_name: 'Elmer Thomas'
+
+## Inbound Parse
+demo_folder_name_incoming: 'BoxDev Demo Folder Incoming'

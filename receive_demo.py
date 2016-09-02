@@ -1,19 +1,16 @@
-"""Receiver module for processing SendGrid Inbound Parse messages"""
+import base64
 import os
 import io
-import base64
 import random
 
-from sendgrid.helpers.inbound import Parse, Config
+from config import CustomConfig
 from boxsdk import OAuth2, Client
-from flask import Flask, request
+from box_utils import get_folder
+from flask import Flask, request, render_template
+from sendgrid.helpers.inbound import Parse
 
-ROOT_FOLDER_ID = 0
+c = CustomConfig(path=os.path.abspath(os.path.dirname(__file__)))
 
-# Configuraton
-HOST = '0.0.0.0'
-DEMO_FOLDER_NAME = 'BoxDev Demo Folder Incoming'
-config = Config(path=os.path.abspath(os.path.dirname(__file__)))
 
 # Authentication
 oauth = OAuth2(
@@ -22,32 +19,30 @@ oauth = OAuth2(
     access_token=os.environ.get('DEVELOPER_TOKEN'),
 )
 client = Client(oauth)
-root_folder = client.folder(folder_id=ROOT_FOLDER_ID)
-
-
-# Returns Box Folder object if exists, None otherwise
-def get_folder(folder_name):
-    items = client.folder(folder_id=ROOT_FOLDER_ID).get_items(limit=10, offset=0)
-    folders = {}
-    for item in items:
-        folders[item.get()['name']] = item.get()['id']
-    if folder_name in folders:
-        folder_id = folders[folder_name]
-        return client.folder(folder_id=folder_id).get()
-    else:
-        return root_folder.create_subfolder(DEMO_FOLDER_NAME)
+root_folder = client.folder(folder_id=c.root_folder_id)
 
 app = Flask(__name__)
 
 
-@app.route(config.endpoint, methods=['POST'])
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
+
+
+@app.route(c.endpoint, methods=['POST'])
 def inbound_parse():
-    parse = Parse(config, request)
-    shared_folder = get_folder(DEMO_FOLDER_NAME)
+    parse = Parse(c, request)
+    shared_folder = get_folder(client, root_folder, c.demo_folder_name_incoming)
+
+    # Parse the attachments
     attachments = parse.attachments()
-    file = io.BytesIO(base64.b64decode(attachments[2]['contents']))
+    file = io.BytesIO(base64.b64decode(attachments[0]['contents']))
     random_number = str(int(random.random()*10000))
-    shared_folder.upload_stream(file, '{0}_{1}.png'.format(attachments[2]['filename'][:-4], random_number))
+    file_name = '{0}_{1}.png'.format(attachments[0]['file_name'][:-4], random_number)
+
+    # Store the attachment in Box
+    shared_folder.upload_stream(file, file_name, random_number)
+
     # Tell SendGrid's Inbound Parse to stop sending POSTs
     # Everything is 200 OK :)
     return "OK"
@@ -55,4 +50,4 @@ def inbound_parse():
 
 if __name__ == '__main__':
     # Be sure to set config.debug_mode to False in production
-    app.run(host=HOST, debug=config.debug_mode, port=config.port)
+    app.run(host=c.flask_host, debug=c.debug_mode, port=c.port)
