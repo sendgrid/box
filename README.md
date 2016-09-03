@@ -97,8 +97,8 @@ Check your Box account. The attached file should be located in the folder specif
 deactivate
 pip install awsebcli
 source ./venv/bin/activate
-eb init -p python3.4 inbound-parse
-eb create inbound-parse3-env
+eb init -p python2.7 inbound-parse
+eb create inbound-parse2-env
 eb setenv CLIENT_ID='YOUR_CLIENT_ID'
 eb setenv CLIENT_SECRET='YOUR_CLIENT_SECRET'
 eb setenv DEVELOPER_TOKEN='YOUR_DEVELOPER_TOKEN'
@@ -112,4 +112,10 @@ For subsequent updates to your code, after commiting your code use the following
 
 ```bash
 eb deploy inbound-parse3-env
+```
+
+When you are done, stop the server with:
+
+```bash
+eb terminate inbound-parse2-env
 ```
