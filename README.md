@@ -111,7 +111,7 @@ Use that URL + /inbound as the value of the URL field at your [SendGrid Parse se
 For subsequent updates to your code, after commiting your code use the following command to update:
 
 ```bash
-eb deploy inbound-parse3-env
+eb deploy inbound-parse2-env
 ```
 
 When you are done, stop the server with:
