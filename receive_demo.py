@@ -38,7 +38,8 @@ def inbound_parse():
     attachments = parse.attachments()
     file = io.BytesIO(base64.b64decode(attachments[0]['contents']))
     random_number = str(int(random.random()*10000))
-    file_name = '{0}_{1}.png'.format(attachments[0]['file_name'][:-4], random_number)
+    suffix = attachments[0]['file_name'][-4:]
+    file_name = '{0}_{1}.{2}'.format(attachments[0]['file_name'][:-4], random_number, suffix)
 
     # Store the attachment in Box
     shared_folder.upload_stream(file, file_name, random_number)
