@@ -53,7 +53,7 @@ if __name__ == '__main__':
     # Be sure to set config.debug_mode to False in production
 
     if os.environ.get('AWS') == 'False':
-        application.host =  c.flask_host
+        application.host = c.flask_host
         application.port = c.port
         application.debug = c.debug_mode
     else:
