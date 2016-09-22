@@ -1,3 +1,5 @@
+There is a blog post and video that demonstrates this repo [here](https://sendgrid.com/blog/using-box-with-sendgrid-to-simplify-inboundoutbound-email-attachments/).
+
 # Demo Sending Email with Attachment Stored in Box
 
 ## Installation
